@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.dialog{
+  width:100px;
+  height:100px;
+  background:green;
+  padding:10px;
+}
+.wrap{
+   position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:hsla(0,0%,0%,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;  
+}
+</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+</head>
+<body>
+<button id=xxx>点我</button>
+<script>
+//声明的代码//
+window.dialog = function(options){
+  let {title,content,buttons} = options//析构赋值//
+  let $div = generateHTML()
+  
+  let api = {
+    close:function(){
+     $div.hide() 
+    }
+  }//返回一个对象，对象有个close方法//
+  $(document.body).append($div)
+  
+   
+  
+  
+ 
+  function generateHTML(){
+   let $wrap = $('<div class="wrap"></div>')
+   let $div = $('<div class="dialog"></div>').appendTo($wrap)
+    $(document.body).append($wrap)
+   
+   
+   let $title = $('<div class="dialog-title">        </div>').text(title).appendTo($div)
+   
+    let $content = $('<div class="dialog-content"></div>').text(content).appendTo($div)
+    
+    let $buttons = $('<div class="dialog-actions"></div>')
+  for(let i =0;i<buttons.length;i++){
+   let $b = $('<button></button>')
+    .text(buttons[i].text)
+    .appendTo($buttons)
+    .on('click',function(){
+      let action = buttons[i].action
+      let result= action && action()
+      if(result !== false){
+        api.close()
+      }    
+    })
+  }
+     $buttons.appendTo($div)
+     return $wrap
+  }
+     return api
+  }
+  
+
+
+
+//使用的代码//
+xxx.onclick = function(){
+ var api = dialog({//这里是什么语法//
+    title:'标题',
+    content:'这是一个对话框',
+    buttons:[
+       {
+         text:'确定',
+         action:function(){
+             
+          return 1
+         }
+       },
+       {
+         text:'取消'
+       }
+    ]
+  })
+ //传入的是title等，传出一个API可以把dialog关闭//
+}//定义一个点击函数，点击后生成一个对象，里面有标题、内容、按钮//
+</script>
+</body>
+</html>
